@@ -1,0 +1,14 @@
+{
+	"name": "music-player-for-desktop-mode",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Build pipeline for the Music Player for Desktop Mode plugin. Compiles src/index.ts into assets/js/music-player-widget[.min].js (+ .css).",
+	"scripts": {
+		"build": "vite build --mode development && vite build --mode production",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"typescript": "^5.5.0",
+		"vite": "^5.4.0"
+	}
+}
