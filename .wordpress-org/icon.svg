@@ -6,11 +6,16 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" rx="58" fill="url(#bg)"/>
+  <g fill="#ffffff" opacity="0.22">
+    <rect x="62"  y="112" width="22" height="82"  rx="11"/>
+    <rect x="117" y="84"  width="22" height="110" rx="11"/>
+    <rect x="172" y="100" width="22" height="94"  rx="11"/>
+  </g>
   <g fill="#ffffff">
-    <rect x="113" y="78" width="13" height="104" rx="6"/>
-    <rect x="189" y="60" width="13" height="104" rx="6"/>
-    <path d="M113 72 L202 56 L202 80 L113 96 Z"/>
-    <ellipse cx="96"  cy="178" rx="26" ry="20" transform="rotate(-20 96 178)"/>
-    <ellipse cx="172" cy="160" rx="26" ry="20" transform="rotate(-20 172 160)"/>
+    <rect x="107" y="76" width="12" height="104" rx="6"/>
+    <rect x="183" y="58" width="12" height="104" rx="6"/>
+    <path d="M107 72 L195 56 L195 78 L107 94 Z"/>
+    <ellipse cx="90"  cy="176" rx="25" ry="19.5" transform="rotate(-20 90 176)"/>
+    <ellipse cx="166" cy="158" rx="25" ry="19.5" transform="rotate(-20 166 158)"/>
   </g>
 </svg>
