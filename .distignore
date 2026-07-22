@@ -1,0 +1,12 @@
+# Files excluded from the distributed plugin package (SVN trunk / .zip).
+# Only dev/hidden files and listing assets are dropped. The TS sources
+# under src/ and the build config STAY in the package so reviewers can
+# verify how assets/js/ is produced (WordPress.org requires the source
+# of minified files to be available).
+
+/.git
+/.github
+/.gitignore
+/.distignore
+/.wordpress-org
+/node_modules
