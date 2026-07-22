@@ -52,6 +52,14 @@ Spotify requires every integration to be a registered app with its own redirect 
 
 No. The Spotify Web Playback SDK requires Premium. Free accounts can still view and control playback happening on their other devices.
 
+== Screenshots ==
+
+1. The Music widget: now playing with transport controls, shuffle/repeat, seek, and volume.
+2. Browse your library — Queue, Liked Songs, Top tracks, Recently played, and Playlists, with infinite scroll.
+3. Search songs and artists, and play with one click.
+4. One-click "Connect Spotify" — end users never touch credentials.
+5. Admin setup: enter the site's Spotify app Client ID and Secret once.
+
 == Changelog ==
 
 = 1.0.0 =
