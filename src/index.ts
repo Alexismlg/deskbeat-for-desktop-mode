@@ -117,7 +117,7 @@ function isNoDeviceError( err: Error ): boolean {
  */
 function handleControlError( err: Error ): void {
 	if ( isNoDeviceError( err ) ) {
-		toast( __( 'Nothing is playing — press play to start.', 'music-player-for-desktop-mode' ) );
+		toast( __( 'Nothing is playing — press play to start.', 'deskbeat-for-desktop-mode' ) );
 		return;
 	}
 	toast( err.message, 'error' );
@@ -158,7 +158,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 						'desktop-mode-music-widget__hint',
 						__(
 							'The music player is not set up yet. Ask an administrator.',
-							'music-player-for-desktop-mode',
+							'deskbeat-for-desktop-mode',
 						),
 					),
 				);
@@ -174,7 +174,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 					'desktop-mode-music-widget__hint',
 					__(
 						'Create an app in the Spotify Developer Dashboard, then paste its Client ID and Secret.',
-						'music-player-for-desktop-mode',
+						'deskbeat-for-desktop-mode',
 					),
 				),
 			);
@@ -184,7 +184,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 				el(
 					'span',
 					'desktop-mode-music-widget__redirect-label',
-					__( 'Redirect URI to register:', 'music-player-for-desktop-mode' ),
+					__( 'Redirect URI to register:', 'deskbeat-for-desktop-mode' ),
 				),
 				el( 'code', undefined, cfg.redirectUri ),
 			);
@@ -195,19 +195,19 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			dash.target = '_blank';
 			dash.rel = 'noreferrer';
 			dash.className = 'desktop-mode-music-widget__dashboard';
-			dash.textContent = __( 'Open Spotify Dashboard ↗', 'music-player-for-desktop-mode' );
+			dash.textContent = __( 'Open Spotify Dashboard ↗', 'deskbeat-for-desktop-mode' );
 			wrap.appendChild( dash );
 
 			const idInput = document.createElement( 'input' );
 			idInput.type = 'text';
 			idInput.className = 'desktop-mode-music-widget__field';
-			idInput.placeholder = __( 'Client ID', 'music-player-for-desktop-mode' );
+			idInput.placeholder = __( 'Client ID', 'deskbeat-for-desktop-mode' );
 			idInput.autocomplete = 'off';
 
 			const secretInput = document.createElement( 'input' );
 			secretInput.type = 'password';
 			secretInput.className = 'desktop-mode-music-widget__field';
-			secretInput.placeholder = __( 'Client Secret', 'music-player-for-desktop-mode' );
+			secretInput.placeholder = __( 'Client Secret', 'deskbeat-for-desktop-mode' );
 			secretInput.autocomplete = 'off';
 
 			wrap.append( idInput, secretInput );
@@ -216,17 +216,17 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			saveBtn.type = 'button';
 			saveBtn.className =
 				'desktop-mode-music-widget__btn desktop-mode-music-widget__btn--text is-primary';
-			saveBtn.textContent = __( 'Save credentials', 'music-player-for-desktop-mode' );
+			saveBtn.textContent = __( 'Save credentials', 'deskbeat-for-desktop-mode' );
 			saveBtn.addEventListener( 'click', () => {
 				const clientId = idInput.value.trim();
 				const clientSecret = secretInput.value.trim();
 				if ( ! clientId || ! clientSecret ) {
-					toast( __( 'Enter both the Client ID and Secret.', 'music-player-for-desktop-mode' ), 'error' );
+					toast( __( 'Enter both the Client ID and Secret.', 'deskbeat-for-desktop-mode' ), 'error' );
 					return;
 				}
 				saveSettings( clientId, clientSecret )
 					.then( () => {
-						toast( __( 'Spotify credentials saved.', 'music-player-for-desktop-mode' ) );
+						toast( __( 'Spotify credentials saved.', 'deskbeat-for-desktop-mode' ) );
 						init();
 					} )
 					.catch( ( err: Error ) => toast( err.message, 'error' ) );
@@ -241,23 +241,23 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			el(
 				'p',
 				'desktop-mode-music-widget__hint',
-				__( 'Connect Spotify to see what you are playing.', 'music-player-for-desktop-mode' ),
+				__( 'Connect Spotify to see what you are playing.', 'deskbeat-for-desktop-mode' ),
 			),
 		);
 		const connectBtn = document.createElement( 'button' );
 		connectBtn.type = 'button';
 		connectBtn.className =
 			'desktop-mode-music-widget__btn desktop-mode-music-widget__btn--text is-primary';
-		connectBtn.textContent = __( 'Connect Spotify', 'music-player-for-desktop-mode' );
+		connectBtn.textContent = __( 'Connect Spotify', 'deskbeat-for-desktop-mode' );
 		connectBtn.addEventListener( 'click', () => {
 			const start = desktopApi()?.startOAuth;
 			if ( ! start ) {
-				toast( __( 'OAuth is unavailable here.', 'music-player-for-desktop-mode' ), 'error' );
+				toast( __( 'OAuth is unavailable here.', 'deskbeat-for-desktop-mode' ), 'error' );
 				return;
 			}
 			start( config().service )
 				.then( () => {
-					toast( __( 'Connected to Spotify.', 'music-player-for-desktop-mode' ) );
+					toast( __( 'Connected to Spotify.', 'deskbeat-for-desktop-mode' ) );
 					init();
 				} )
 				.catch( ( err: Error ) => toast( err.message, 'error' ) );
@@ -294,7 +294,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		trackEl = el(
 			'div',
 			'desktop-mode-music-widget__track',
-			__( 'Nothing playing', 'music-player-for-desktop-mode' ),
+			__( 'Nothing playing', 'deskbeat-for-desktop-mode' ),
 		);
 		artistEl = el( 'div', 'desktop-mode-music-widget__artist' );
 		meta.append( trackEl, artistEl );
@@ -302,25 +302,25 @@ function mount( container: HTMLElement ): WidgetTeardown {
 
 		const browseBtn = iconButton(
 			'dashicons-list-view',
-			__( 'Browse your library', 'music-player-for-desktop-mode' ),
+			__( 'Browse your library', 'deskbeat-for-desktop-mode' ),
 		);
 		browseBtn.classList.add( 'desktop-mode-music-widget__open' );
 		browseBtn.addEventListener( 'click', showBrowse );
 
 		const disconnectBtn = iconButton(
 			'dashicons-exit',
-			__( 'Disconnect Spotify', 'music-player-for-desktop-mode' ),
+			__( 'Disconnect Spotify', 'deskbeat-for-desktop-mode' ),
 		);
 		disconnectBtn.classList.add( 'desktop-mode-music-widget__open' );
 		disconnectBtn.addEventListener( 'click', () => {
 			void ( async () => {
 				const ok = await ( desktopApi()?.confirm?.( {
-					title: __( 'Disconnect Spotify?', 'music-player-for-desktop-mode' ),
+					title: __( 'Disconnect Spotify?', 'deskbeat-for-desktop-mode' ),
 					message: __(
 						'The desktop will forget your Spotify connection. You can reconnect any time.',
-						'music-player-for-desktop-mode',
+						'deskbeat-for-desktop-mode',
 					),
-					confirmLabel: __( 'Disconnect', 'music-player-for-desktop-mode' ),
+					confirmLabel: __( 'Disconnect', 'deskbeat-for-desktop-mode' ),
 					danger: true,
 				} ) ?? Promise.resolve( true ) );
 				if ( ! ok ) {
@@ -333,7 +333,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 				} catch ( err ) {
 					toast( ( err as Error ).message, 'error' );
 				}
-				toast( __( 'Disconnected from Spotify.', 'music-player-for-desktop-mode' ) );
+				toast( __( 'Disconnected from Spotify.', 'deskbeat-for-desktop-mode' ) );
 				init();
 			} )();
 		} );
@@ -345,17 +345,17 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		const controls = el( 'div', 'desktop-mode-music-widget__controls' );
 		const prevBtn = iconButton(
 			'dashicons-controls-back',
-			__( 'Previous', 'music-player-for-desktop-mode' ),
+			__( 'Previous', 'deskbeat-for-desktop-mode' ),
 		);
 		const playBtn = iconButton(
 			'dashicons-controls-play',
-			__( 'Play/Pause', 'music-player-for-desktop-mode' ),
+			__( 'Play/Pause', 'deskbeat-for-desktop-mode' ),
 		);
 		playBtn.classList.add( 'is-primary' );
 		playIcon = playBtn.querySelector( '.dashicons' ) as HTMLElement;
 		const nextBtn = iconButton(
 			'dashicons-controls-forward',
-			__( 'Next', 'music-player-for-desktop-mode' ),
+			__( 'Next', 'deskbeat-for-desktop-mode' ),
 		);
 
 		const run = ( fn: () => Promise< unknown > ) => (): void => {
@@ -365,7 +365,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		};
 		const volBtn = iconButton(
 			'dashicons-controls-volumeon',
-			__( 'Volume', 'music-player-for-desktop-mode' ),
+			__( 'Volume', 'deskbeat-for-desktop-mode' ),
 		);
 		volumeBtn = volBtn;
 
@@ -394,7 +394,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			toast(
 				__(
 					'Start playback in the Spotify app first — a free account can’t play in the browser.',
-					'music-player-for-desktop-mode',
+					'deskbeat-for-desktop-mode',
 				),
 			);
 		} );
@@ -459,7 +459,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		}
 		const item = np.item ?? null;
 		if ( ! item ) {
-			trackEl.textContent = __( 'Nothing playing', 'music-player-for-desktop-mode' );
+			trackEl.textContent = __( 'Nothing playing', 'deskbeat-for-desktop-mode' );
 			artistEl.textContent = '';
 			artImg.removeAttribute( 'src' );
 			artBox.classList.add( 'is-empty' );
@@ -529,7 +529,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		const header = el( 'div', 'desktop-mode-music-widget__browse-header' );
 		const backBtn = iconButton(
 			'dashicons-arrow-left-alt2',
-			__( 'Back', 'music-player-for-desktop-mode' ),
+			__( 'Back', 'deskbeat-for-desktop-mode' ),
 		);
 		backBtn.addEventListener( 'click', resumeNow );
 		header.append(
@@ -537,7 +537,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			el(
 				'span',
 				'desktop-mode-music-widget__browse-title',
-				__( 'Browse', 'music-player-for-desktop-mode' ),
+				__( 'Browse', 'deskbeat-for-desktop-mode' ),
 			),
 		);
 		const body = el( 'div', 'desktop-mode-music-widget__browse-body' );
@@ -555,7 +555,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		} else {
 			await playUri( item );
 		}
-		toast( __( 'Playing…', 'music-player-for-desktop-mode' ) );
+		toast( __( 'Playing…', 'deskbeat-for-desktop-mode' ) );
 		resumeNow();
 	}
 

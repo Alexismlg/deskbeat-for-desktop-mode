@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Music Player for Desktop Mode
+ * Plugin Name:       Deskbeat for Desktop Mode
  * Description:       A now-playing widget for Desktop Mode that connects your Spotify account — playback controls, volume, and a browsable library, right on the desktop.
  * Version:           1.0.0
  * Requires at least: 6.5
@@ -9,7 +9,7 @@
  * Author:            Alexis Mora
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       music-player-for-desktop-mode
+ * Text Domain:       deskbeat-for-desktop-mode
  * Domain Path:       /languages
  *
  * Not affiliated with or endorsed by Spotify. "Spotify" is a trademark

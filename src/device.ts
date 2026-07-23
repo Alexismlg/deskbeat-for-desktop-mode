@@ -77,7 +77,7 @@ export async function ensureSharedDevice(
 		await sleep( 1200 );
 	}
 	shared.creating = createPlaybackDevice(
-		__( 'Desktop Mode', 'music-player-for-desktop-mode' ),
+		__( 'Desktop Mode', 'deskbeat-for-desktop-mode' ),
 		{ onError },
 	)
 		.then( ( dev ) => {

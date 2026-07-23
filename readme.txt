@@ -1,5 +1,5 @@
-=== Music Player for Desktop Mode ===
-Contributors: alexismora
+=== Deskbeat for Desktop Mode ===
+Contributors: alexismp
 Tags: desktop-mode, spotify, music, player, widget
 Requires at least: 6.5
 Tested up to: 7.0
@@ -12,7 +12,7 @@ A now-playing widget for Desktop Mode that connects your Spotify account — pla
 
 == Description ==
 
-Music Player for Desktop Mode adds a compact music widget to the [Desktop Mode](https://wordpress.org/plugins/desktop-mode/) desktop. Once a site administrator connects a Spotify Developer app, each user links their own Spotify account with a single click and gets:
+Deskbeat adds a compact music widget to the [Desktop Mode](https://wordpress.org/plugins/desktop-mode/) desktop. Once a site administrator connects a Spotify Developer app, each user links their own Spotify account with a single click and gets:
 
 * **Now playing** — album art, track, and artist, updating live.
 * **Transport controls** — play/pause, next, previous, shuffle, repeat, seek, and volume.
@@ -28,6 +28,26 @@ This plugin is not affiliated with, endorsed by, or sponsored by Spotify. "Spoti
 = Credentials stay yours =
 
 No Spotify credentials ship with this plugin. Each site connects using its **own** Spotify Developer app: an administrator creates a free app and enters its Client ID and Secret once. Tokens are stored server-side per user; the Client Secret and refresh tokens never reach the browser.
+
+== External services ==
+
+This plugin connects to **Spotify** so you can view and control your own Spotify playback from the Desktop Mode desktop. It relies on the following Spotify services:
+
+1. **Spotify Web API** (`https://accounts.spotify.com`, `https://api.spotify.com`)
+   - What it is: Spotify's official API for account authorization and playback control.
+   - What is sent and when: after you click "Connect Spotify", the server exchanges an OAuth authorization code for access/refresh tokens; while the widget is open, it sends playback commands (play, pause, next, previous, seek, shuffle, repeat, volume, transfer) and reads your now-playing state, library, and search queries you type. Requests are made server-side on your behalf; your Client Secret and refresh token are never exposed to the browser.
+   - No data is sent until you connect your account.
+
+2. **Spotify Web Playback SDK** (`https://sdk.scdn.co/spotify-player.js`)
+   - What it is: Spotify's official in-browser player library, loaded via a script tag (it must be served from Spotify's own domain; there is no self-hosted version).
+   - What is sent and when: for Spotify Premium accounts, when you start in-browser playback it registers a playback device with Spotify and streams audio using a short-lived access token.
+
+Use of Spotify is subject to Spotify's terms and privacy policy:
+- Terms of Use: https://www.spotify.com/legal/end-user-agreement/
+- Privacy Policy: https://www.spotify.com/legal/privacy-policy/
+- Developer Terms (for the app credentials the administrator provides): https://developer.spotify.com/terms/
+
+This plugin is not affiliated with, endorsed by, or sponsored by Spotify. No Spotify credentials are bundled — each site uses its own Spotify Developer app.
 
 == Installation ==
 

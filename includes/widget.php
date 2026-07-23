@@ -85,14 +85,14 @@ function music_player_for_desktop_mode_register_assets() {
 	$css_path = $dir . 'assets/js/music-player-widget' . $suffix . '.css';
 
 	wp_register_style(
-		'music-player-for-desktop-mode',
+		'deskbeat-for-desktop-mode',
 		$url . 'assets/js/music-player-widget' . $suffix . '.css',
 		array(),
 		file_exists( $css_path ) ? (string) filemtime( $css_path ) : $version
 	);
 
 	wp_register_script(
-		'music-player-for-desktop-mode',
+		'deskbeat-for-desktop-mode',
 		$url . 'assets/js/music-player-widget' . $suffix . '.js',
 		// `desktop-mode` so `wp.desktop.*` is on the global before the
 		// widget mounts.
@@ -101,13 +101,13 @@ function music_player_for_desktop_mode_register_assets() {
 		true
 	);
 	wp_set_script_translations(
-		'music-player-for-desktop-mode',
-		'music-player-for-desktop-mode',
+		'deskbeat-for-desktop-mode',
+		'deskbeat-for-desktop-mode',
 		$dir . 'languages'
 	);
 
 	wp_localize_script(
-		'music-player-for-desktop-mode',
+		'deskbeat-for-desktop-mode',
 		'desktopModeMusicPlayerConfig',
 		desktop_mode_music_player_js_config()
 	);
@@ -129,7 +129,7 @@ function music_player_for_desktop_mode_enqueue_styles() {
 	if ( function_exists( 'desktop_mode_is_chromeless_request' ) && desktop_mode_is_chromeless_request() ) {
 		return;
 	}
-	wp_enqueue_style( 'music-player-for-desktop-mode' );
+	wp_enqueue_style( 'deskbeat-for-desktop-mode' );
 }
 add_action( 'admin_enqueue_scripts', 'music_player_for_desktop_mode_enqueue_styles', 20 );
 
@@ -148,10 +148,10 @@ function music_player_for_desktop_mode_register_widget() {
 	desktop_mode_register_widget(
 		'desktop-mode/music-player',
 		array(
-			'label'          => __( 'Music', 'music-player-for-desktop-mode' ),
-			'description'    => __( 'Now playing on Spotify, with controls, volume, and your library.', 'music-player-for-desktop-mode' ),
+			'label'          => __( 'Music', 'deskbeat-for-desktop-mode' ),
+			'description'    => __( 'Now playing on Spotify, with controls, volume, and your library.', 'deskbeat-for-desktop-mode' ),
 			'icon'           => 'dashicons-format-audio',
-			'script'         => 'music-player-for-desktop-mode',
+			'script'         => 'deskbeat-for-desktop-mode',
 			'movable'        => true,
 			'resizable'      => true,
 			'min_width'      => 240,

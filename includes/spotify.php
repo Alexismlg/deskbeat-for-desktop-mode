@@ -195,7 +195,7 @@ function desktop_mode_music_player_refresh_tokens( $user_id ) {
 	if ( null === $tokens || '' === (string) ( $tokens['refresh_token'] ?? '' ) ) {
 		return new WP_Error(
 			'desktop_mode_music_player_no_refresh_token',
-			__( 'No Spotify refresh token on file — reconnect the account.', 'music-player-for-desktop-mode' )
+			__( 'No Spotify refresh token on file — reconnect the account.', 'deskbeat-for-desktop-mode' )
 		);
 	}
 
@@ -203,7 +203,7 @@ function desktop_mode_music_player_refresh_tokens( $user_id ) {
 	if ( '' === $client['id'] || '' === $client['secret'] ) {
 		return new WP_Error(
 			'desktop_mode_music_player_not_configured',
-			__( 'Spotify app credentials are not configured.', 'music-player-for-desktop-mode' )
+			__( 'Spotify app credentials are not configured.', 'deskbeat-for-desktop-mode' )
 		);
 	}
 
@@ -235,7 +235,7 @@ function desktop_mode_music_player_refresh_tokens( $user_id ) {
 			'desktop_mode_music_player_refresh_failed',
 			sprintf(
 				/* translators: %d: HTTP status code. */
-				__( 'Spotify token refresh failed with HTTP %d.', 'music-player-for-desktop-mode' ),
+				__( 'Spotify token refresh failed with HTTP %d.', 'deskbeat-for-desktop-mode' ),
 				$status
 			),
 			array( 'status' => $status )
@@ -260,7 +260,7 @@ function desktop_mode_music_player_valid_access_token( $user_id ) {
 	if ( null === $tokens ) {
 		return new WP_Error(
 			'desktop_mode_music_player_not_connected',
-			__( 'This account is not connected to Spotify.', 'music-player-for-desktop-mode' ),
+			__( 'This account is not connected to Spotify.', 'deskbeat-for-desktop-mode' ),
 			array( 'status' => 409 )
 		);
 	}
@@ -274,7 +274,7 @@ function desktop_mode_music_player_valid_access_token( $user_id ) {
 		if ( null === $tokens ) {
 			return new WP_Error(
 				'desktop_mode_music_player_not_connected',
-				__( 'This account is not connected to Spotify.', 'music-player-for-desktop-mode' ),
+				__( 'This account is not connected to Spotify.', 'deskbeat-for-desktop-mode' ),
 				array( 'status' => 409 )
 			);
 		}

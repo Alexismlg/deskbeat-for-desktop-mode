@@ -35,7 +35,7 @@ function desktop_mode_music_player_rest_can_use() {
 	if ( ! is_user_logged_in() ) {
 		return new WP_Error(
 			'rest_forbidden',
-			__( 'You must be logged in to use the music player.', 'music-player-for-desktop-mode' ),
+			__( 'You must be logged in to use the music player.', 'deskbeat-for-desktop-mode' ),
 			array( 'status' => 401 )
 		);
 	}
@@ -53,7 +53,7 @@ function desktop_mode_music_player_rest_can_configure() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return new WP_Error(
 			'rest_forbidden',
-			__( 'You need to manage options to configure the music player.', 'music-player-for-desktop-mode' ),
+			__( 'You need to manage options to configure the music player.', 'deskbeat-for-desktop-mode' ),
 			array( 'status' => 403 )
 		);
 	}
@@ -190,7 +190,7 @@ function desktop_mode_music_player_proxy_response( $result ) {
 	if ( $status < 200 || $status >= 300 ) {
 		$message = sprintf(
 			/* translators: %d: HTTP status code returned by Spotify. */
-			__( 'Spotify request failed (HTTP %d).', 'music-player-for-desktop-mode' ),
+			__( 'Spotify request failed (HTTP %d).', 'deskbeat-for-desktop-mode' ),
 			$status
 		);
 		if ( is_array( $result['body'] ) && isset( $result['body']['error']['message'] ) ) {
@@ -534,7 +534,7 @@ function desktop_mode_music_player_rest_transfer( WP_REST_Request $request ) {
 	if ( '' === $device_id ) {
 		return new WP_Error(
 			'desktop_mode_music_player_missing_device',
-			__( 'A device id is required to transfer playback.', 'music-player-for-desktop-mode' ),
+			__( 'A device id is required to transfer playback.', 'deskbeat-for-desktop-mode' ),
 			array( 'status' => 400 )
 		);
 	}
@@ -612,8 +612,8 @@ function desktop_mode_music_player_normalize_playlist( array $playlist ) {
 	$count     = $has_count ? (int) $playlist['tracks']['total'] : 0;
 	$subtitle  = $has_count
 		/* translators: %d: number of tracks in a playlist. */
-		? sprintf( _n( '%d track', '%d tracks', $count, 'music-player-for-desktop-mode' ), $count )
-		: __( 'Playlist', 'music-player-for-desktop-mode' );
+		? sprintf( _n( '%d track', '%d tracks', $count, 'deskbeat-for-desktop-mode' ), $count )
+		: __( 'Playlist', 'deskbeat-for-desktop-mode' );
 
 	return array(
 		'uri'       => isset( $playlist['uri'] ) ? (string) $playlist['uri'] : '',
@@ -768,7 +768,7 @@ function desktop_mode_music_player_browse_response( $type, $path, WP_REST_Reques
 	if ( $status < 200 || $status >= 300 ) {
 		$message = sprintf(
 			/* translators: %d: HTTP status code returned by Spotify. */
-			__( 'Spotify request failed (HTTP %d).', 'music-player-for-desktop-mode' ),
+			__( 'Spotify request failed (HTTP %d).', 'deskbeat-for-desktop-mode' ),
 			$status
 		);
 		if ( is_array( $result['body'] ) && isset( $result['body']['error']['message'] ) ) {
@@ -834,7 +834,7 @@ function desktop_mode_music_player_normalize_artist( array $artist ) {
 	return array(
 		'uri'       => isset( $artist['uri'] ) ? (string) $artist['uri'] : '',
 		'name'      => isset( $artist['name'] ) ? (string) $artist['name'] : '',
-		'subtitle'  => __( 'Artist', 'music-player-for-desktop-mode' ),
+		'subtitle'  => __( 'Artist', 'deskbeat-for-desktop-mode' ),
 		'image'     => $image,
 		'isContext' => true,
 	);
@@ -882,7 +882,7 @@ function desktop_mode_music_player_rest_search( WP_REST_Request $request ) {
 	if ( $status < 200 || $status >= 300 ) {
 		$message = sprintf(
 			/* translators: %d: HTTP status code returned by Spotify. */
-			__( 'Spotify request failed (HTTP %d).', 'music-player-for-desktop-mode' ),
+			__( 'Spotify request failed (HTTP %d).', 'deskbeat-for-desktop-mode' ),
 			$status
 		);
 		if ( is_array( $result['body'] ) && isset( $result['body']['error']['message'] ) ) {

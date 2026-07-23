@@ -24,12 +24,12 @@ export interface WidgetBrowseDeps {
 }
 
 const SECTIONS: Array< { id: BrowseSection; label: string } > = [
-	{ id: 'queue', label: __( 'Queue', 'music-player-for-desktop-mode' ) },
-	{ id: 'library', label: __( 'Liked', 'music-player-for-desktop-mode' ) },
-	{ id: 'top', label: __( 'Top', 'music-player-for-desktop-mode' ) },
-	{ id: 'recently-played', label: __( 'Recent', 'music-player-for-desktop-mode' ) },
-	{ id: 'playlists', label: __( 'Playlists', 'music-player-for-desktop-mode' ) },
-	{ id: 'search', label: __( 'Search', 'music-player-for-desktop-mode' ) },
+	{ id: 'queue', label: __( 'Queue', 'deskbeat-for-desktop-mode' ) },
+	{ id: 'library', label: __( 'Liked', 'deskbeat-for-desktop-mode' ) },
+	{ id: 'top', label: __( 'Top', 'deskbeat-for-desktop-mode' ) },
+	{ id: 'recently-played', label: __( 'Recent', 'deskbeat-for-desktop-mode' ) },
+	{ id: 'playlists', label: __( 'Playlists', 'deskbeat-for-desktop-mode' ) },
+	{ id: 'search', label: __( 'Search', 'deskbeat-for-desktop-mode' ) },
 ];
 
 const SCROLL_THRESHOLD_PX = 48;
@@ -58,7 +58,7 @@ export function renderWidgetBrowse(
 	const searchInput = document.createElement( 'input' );
 	searchInput.type = 'search';
 	searchInput.className = 'desktop-mode-music-widget__search';
-	searchInput.placeholder = __( 'Search songs or artists…', 'music-player-for-desktop-mode' );
+	searchInput.placeholder = __( 'Search songs or artists…', 'deskbeat-for-desktop-mode' );
 	searchInput.hidden = true;
 	const list = node( 'div', 'desktop-mode-music-widget__browse-list' );
 	container.append( nav, searchInput, list );
@@ -127,7 +127,7 @@ export function renderWidgetBrowse(
 				node(
 					'p',
 					'desktop-mode-music-widget__browse-empty',
-					__( 'Loading…', 'music-player-for-desktop-mode' ),
+					__( 'Loading…', 'deskbeat-for-desktop-mode' ),
 				),
 			);
 		}
@@ -147,8 +147,8 @@ export function renderWidgetBrowse(
 					if ( page.items.length === 0 ) {
 						showEmpty(
 							active === 'search'
-								? __( 'No results.', 'music-player-for-desktop-mode' )
-								: __( 'Nothing here yet.', 'music-player-for-desktop-mode' ),
+								? __( 'No results.', 'deskbeat-for-desktop-mode' )
+								: __( 'Nothing here yet.', 'deskbeat-for-desktop-mode' ),
 						);
 					}
 				}
@@ -161,7 +161,7 @@ export function renderWidgetBrowse(
 				}
 				if ( initial ) {
 					showEmpty(
-						__( 'Could not load this list.', 'music-player-for-desktop-mode' ) +
+						__( 'Could not load this list.', 'deskbeat-for-desktop-mode' ) +
 							' ' +
 							err.message,
 					);
@@ -190,7 +190,7 @@ export function renderWidgetBrowse(
 		cursor = null;
 		searchQuery = query.trim();
 		if ( searchQuery === '' ) {
-			showEmpty( __( 'Type to search songs and artists.', 'music-player-for-desktop-mode' ) );
+			showEmpty( __( 'Type to search songs and artists.', 'deskbeat-for-desktop-mode' ) );
 			return;
 		}
 		loadPage( true );
