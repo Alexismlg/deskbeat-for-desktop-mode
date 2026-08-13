@@ -2,7 +2,7 @@
  * Music Player for Desktop Mode — client-side REST helpers.
  *
  * Thin typed wrappers over the `desktop-mode-music-player/v1` routes.
- * Requests route through Desktop Mode's `wp.desktop.fetch` (so they feed
+ * Requests route through OpenStation's `wp.os.fetch` (so they feed
  * the activity bus) and carry the REST nonce from the localized config
  * blob. Falls back to the native `fetch` if the host helper is missing.
  *
@@ -15,7 +15,7 @@ interface DesktopFetchOpts {
 	silent?: boolean;
 }
 
-/** Route through `wp.desktop.fetch` when Desktop Mode is present. */
+/** Route through `wp.os.fetch` when OpenStation is present. */
 function trackedFetch(
 	input: RequestInfo,
 	init?: RequestInit,
@@ -24,7 +24,7 @@ function trackedFetch(
 	const helper = (
 		window as unknown as {
 			wp?: {
-				desktop?: {
+				os?: {
 					fetch?: (
 						i: RequestInfo,
 						ini?: RequestInit,
@@ -33,7 +33,7 @@ function trackedFetch(
 				};
 			};
 		}
-	 ).wp?.desktop?.fetch;
+	 ).wp?.os?.fetch;
 	if ( helper ) {
 		return helper( input, init, opts );
 	}

@@ -2,24 +2,24 @@
 Contributors: alexismp
 Tags: desktop-mode, spotify, music, player, widget
 Requires at least: 6.5
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A now-playing widget for Desktop Mode that connects your Spotify account — playback controls, volume, and a browsable library on the desktop.
+A now-playing widget for OpenStation (formerly Desktop Mode) that connects your Spotify account — playback controls, volume, and a browsable library on the desktop.
 
 == Description ==
 
-Deskbeat adds a compact music widget to the [Desktop Mode](https://wordpress.org/plugins/desktop-mode/) desktop. Once a site administrator connects a Spotify Developer app, each user links their own Spotify account with a single click and gets:
+Deskbeat adds a compact music widget to the [OpenStation](https://wordpress.org/plugins/desktop-mode/) (formerly Desktop Mode) desktop. Once a site administrator connects a Spotify Developer app, each user links their own Spotify account with a single click and gets:
 
 * **Now playing** — album art, track, and artist, updating live.
 * **Transport controls** — play/pause, next, previous, shuffle, repeat, seek, and volume.
 * **In-browser playback** — for Spotify Premium accounts, via the Spotify Web Playback SDK. Free accounts can see and control playback on their other devices.
 * **Browse your library** — Queue, Liked Songs, Top tracks, Recently played, and Playlists, plus a search — all inside the widget, with infinite scroll.
 
-This plugin requires the **Desktop Mode** plugin and works as a widget you add from the Desktop Mode widget picker.
+This plugin requires the **OpenStation** plugin (formerly Desktop Mode; the WordPress.org slug is still `desktop-mode`) and works as a widget you add from the OpenStation widget picker.
 
 = Not affiliated with Spotify =
 
@@ -31,7 +31,7 @@ No Spotify credentials ship with this plugin. Each site connects using its **own
 
 == External services ==
 
-This plugin connects to **Spotify** so you can view and control your own Spotify playback from the Desktop Mode desktop. It relies on the following Spotify services:
+This plugin connects to **Spotify** so you can view and control your own Spotify playback from the OpenStation desktop. It relies on the following Spotify services:
 
 1. **Spotify Web API** (`https://accounts.spotify.com`, `https://api.spotify.com`)
    - What it is: Spotify's official API for account authorization and playback control.
@@ -51,11 +51,11 @@ This plugin is not affiliated with, endorsed by, or sponsored by Spotify. No Spo
 
 == Installation ==
 
-1. Install and activate the **Desktop Mode** plugin.
-2. Install and activate **Music Player for Desktop Mode**.
+1. Install and activate the **OpenStation** plugin (formerly Desktop Mode).
+2. Install and activate **Deskbeat for Desktop Mode**.
 3. Create a free app at the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
 4. In the app's settings, add the Redirect URI shown in the widget's setup screen (it is your site's REST callback), and enable **Web API** and **Web Playback SDK**.
-5. In Desktop Mode, add the **Music** widget from the widget picker. As an administrator, paste the app's Client ID and Client Secret in the setup screen.
+5. In OpenStation, add the **Music** widget from the widget picker. As an administrator, paste the app's Client ID and Client Secret in the setup screen.
 6. Click **Connect Spotify** to link your account.
 
 == Frequently Asked Questions ==
@@ -81,6 +81,10 @@ No. The Spotify Web Playback SDK requires Premium. Free accounts can still view 
 5. Admin setup: enter the site's Spotify app Client ID and Secret once.
 
 == Changelog ==
+
+= 1.1.0 =
+* Compatibility: updated for **OpenStation 1.0.1** — the host plugin formerly known as Desktop Mode. It renamed its public API (`openstation_*`), its script handle (`openstation`), its JS global (`wp.os`), the widget-mount registry (`window.openStationWidgets`), and the active body class (`os-active`); Deskbeat now targets these. Requires OpenStation 1.0.1 or newer.
+* Tested up to WordPress 7.1.
 
 = 1.0.0 =
 * Initial release: now-playing widget with controls, volume, library browsing, and search for Desktop Mode.

@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Deskbeat for Desktop Mode
- * Description:       A now-playing widget for Desktop Mode that connects your Spotify account — playback controls, volume, and a browsable library, right on the desktop.
- * Version:           1.0.0
+ * Description:       A now-playing widget for OpenStation (formerly Desktop Mode) that connects your Spotify account — playback controls, volume, and a browsable library, right on the desktop.
+ * Version:           1.1.0
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  desktop-mode
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'MUSIC_PLAYER_FOR_DESKTOP_MODE_FILE', __FILE__ );
 define( 'MUSIC_PLAYER_FOR_DESKTOP_MODE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MUSIC_PLAYER_FOR_DESKTOP_MODE_URL', plugin_dir_url( __FILE__ ) );
-define( 'MUSIC_PLAYER_FOR_DESKTOP_MODE_VERSION', '1.0.0' );
+define( 'MUSIC_PLAYER_FOR_DESKTOP_MODE_VERSION', '1.1.0' );
 
 require_once MUSIC_PLAYER_FOR_DESKTOP_MODE_DIR . 'includes/spotify.php';
 require_once MUSIC_PLAYER_FOR_DESKTOP_MODE_DIR . 'includes/rest.php';

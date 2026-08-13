@@ -8,7 +8,7 @@
     return api?.__ ? api.__(text, domain) : text;
   }
   function trackedFetch(input, init, opts) {
-    const helper = window.wp?.desktop?.fetch;
+    const helper = window.wp?.os?.fetch;
     if (helper) {
       return helper(input, init, opts);
     }
@@ -460,7 +460,7 @@
     desktopApi()?.showToast?.({ message, type });
   }
   function desktopApi() {
-    return window.wp?.desktop;
+    return window.wp?.os;
   }
   function el(tag, className, text) {
     const node2 = document.createElement(tag);
@@ -880,6 +880,6 @@
       stop();
     };
   }
-  const widgets = window.desktopModeWidgets ?? (window.desktopModeWidgets = {});
+  const widgets = window.openStationWidgets ?? (window.openStationWidgets = {});
   widgets[WIDGET_ID] = mount;
 })();

@@ -47,7 +47,7 @@ type WidgetTeardown = () => void;
 
 declare global {
 	interface Window {
-		desktopModeWidgets?: Record<
+		openStationWidgets?: Record<
 			string,
 			( container: HTMLElement, ctx: unknown ) => WidgetTeardown
 		>;
@@ -71,8 +71,8 @@ function toast( message: string, type: 'success' | 'error' = 'success' ): void {
 }
 
 function desktopApi(): DesktopApi | undefined {
-	return ( window as unknown as { wp?: { desktop?: DesktopApi } } ).wp
-		?.desktop;
+	return ( window as unknown as { wp?: { os?: DesktopApi } } ).wp
+		?.os;
 }
 
 function el< K extends keyof HTMLElementTagNameMap >(
@@ -593,8 +593,8 @@ function mount( container: HTMLElement ): WidgetTeardown {
 	};
 }
 
-const widgets = ( window.desktopModeWidgets ??
-	( window.desktopModeWidgets = {} ) ) as NonNullable<
-	Window[ 'desktopModeWidgets' ]
+const widgets = ( window.openStationWidgets ??
+	( window.openStationWidgets = {} ) ) as NonNullable<
+	Window[ 'openStationWidgets' ]
 >;
 widgets[ WIDGET_ID ] = mount;

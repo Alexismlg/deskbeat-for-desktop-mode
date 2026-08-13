@@ -3,10 +3,10 @@
  * Music Player for Desktop Mode — widget registration, assets, OAuth
  * relay, and JS config.
  *
- * Registers a Desktop Mode widget (`desktop-mode/music-player`) that
+ * Registers an OpenStation widget (`desktop-mode/music-player`) that
  * shows now-playing, transport controls, volume, and a Browse/Search
  * library — all driven by the site's own Spotify app credentials. Uses
- * only Desktop Mode's public APIs (`desktop_mode_register_widget`, the
+ * only OpenStation's public APIs (`openstation_register_widget`, the
  * OAuth relay, and the REST layer), so it stays a clean add-on.
  *
  * @package MusicPlayerForDesktopMode
@@ -28,8 +28,8 @@ function desktop_mode_music_player_js_config() {
 		'restNonce'    => wp_create_nonce( 'wp_rest' ),
 		'restBase'     => esc_url_raw( rest_url( DESKTOP_MODE_MUSIC_PLAYER_REST_NAMESPACE ) ),
 		'service'      => DESKTOP_MODE_MUSIC_PLAYER_SERVICE,
-		'redirectUri'  => function_exists( 'desktop_mode_oauth_redirect_uri' )
-			? esc_url_raw( desktop_mode_oauth_redirect_uri() )
+		'redirectUri'  => function_exists( 'openstation_oauth_redirect_uri' )
+			? esc_url_raw( openstation_oauth_redirect_uri() )
 			: '',
 		'dashboardUrl' => 'https://developer.spotify.com/dashboard',
 	);
@@ -37,7 +37,7 @@ function desktop_mode_music_player_js_config() {
 
 /**
  * Register the Spotify OAuth relay once app credentials are configured.
- * Skipped (silently) when Desktop Mode isn't active or no credentials
+ * Skipped (silently) when OpenStation isn't active or no credentials
  * are set yet — the widget's setup screen collects them.
  *
  * @since 1.0.0
@@ -46,7 +46,7 @@ function desktop_mode_music_player_js_config() {
  */
 function music_player_for_desktop_mode_register_relay() {
 	if (
-		! function_exists( 'desktop_mode_register_oauth_relay' )
+		! function_exists( 'openstation_register_oauth_relay' )
 		|| ! desktop_mode_music_player_is_configured()
 	) {
 		return;
@@ -54,7 +54,7 @@ function music_player_for_desktop_mode_register_relay() {
 
 	$client = desktop_mode_music_player_get_client();
 
-	desktop_mode_register_oauth_relay(
+	openstation_register_oauth_relay(
 		DESKTOP_MODE_MUSIC_PLAYER_SERVICE,
 		array(
 			'authorize_url' => DESKTOP_MODE_MUSIC_PLAYER_AUTHORIZE_URL,
@@ -94,9 +94,9 @@ function music_player_for_desktop_mode_register_assets() {
 	wp_register_script(
 		'deskbeat-for-desktop-mode',
 		$url . 'assets/js/music-player-widget' . $suffix . '.js',
-		// `desktop-mode` so `wp.desktop.*` is on the global before the
+		// `openstation` so `wp.os.*` is on the global before the
 		// widget mounts.
-		array( 'wp-i18n', 'desktop-mode' ),
+		array( 'wp-i18n', 'openstation' ),
 		file_exists( $js_path ) ? (string) filemtime( $js_path ) : $version,
 		true
 	);
@@ -115,7 +115,7 @@ function music_player_for_desktop_mode_register_assets() {
 add_action( 'init', 'music_player_for_desktop_mode_register_assets', 5 );
 
 /**
- * Eagerly enqueue the widget CSS on Desktop Mode shell pages (avoids a
+ * Eagerly enqueue the widget CSS on OpenStation shell pages (avoids a
  * flash of unstyled content before the lazy JS mounts).
  *
  * @since 1.0.0
@@ -123,10 +123,10 @@ add_action( 'init', 'music_player_for_desktop_mode_register_assets', 5 );
  * @return void
  */
 function music_player_for_desktop_mode_enqueue_styles() {
-	if ( function_exists( 'desktop_mode_is_enabled' ) && ! desktop_mode_is_enabled() ) {
+	if ( function_exists( 'openstation_is_enabled' ) && ! openstation_is_enabled() ) {
 		return;
 	}
-	if ( function_exists( 'desktop_mode_is_chromeless_request' ) && desktop_mode_is_chromeless_request() ) {
+	if ( function_exists( 'openstation_is_chromeless_request' ) && openstation_is_chromeless_request() ) {
 		return;
 	}
 	wp_enqueue_style( 'deskbeat-for-desktop-mode' );
@@ -134,18 +134,18 @@ function music_player_for_desktop_mode_enqueue_styles() {
 add_action( 'admin_enqueue_scripts', 'music_player_for_desktop_mode_enqueue_styles', 20 );
 
 /**
- * Announce the widget to Desktop Mode so it appears in the picker.
+ * Announce the widget to OpenStation so it appears in the picker.
  *
  * @since 1.0.0
  *
  * @return void
  */
 function music_player_for_desktop_mode_register_widget() {
-	if ( ! function_exists( 'desktop_mode_register_widget' ) ) {
+	if ( ! function_exists( 'openstation_register_widget' ) ) {
 		return;
 	}
 
-	desktop_mode_register_widget(
+	openstation_register_widget(
 		'desktop-mode/music-player',
 		array(
 			'label'          => __( 'Music', 'deskbeat-for-desktop-mode' ),
