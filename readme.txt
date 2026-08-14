@@ -74,12 +74,12 @@ No. The Spotify Web Playback SDK requires Premium. Free accounts can still view 
 
 == Screenshots ==
 
-1. The Music widget: now playing with transport controls, shuffle/repeat, seek, and volume.
-2. Browse your library — Queue, Liked Songs, Top tracks, Recently played, and Playlists, with infinite scroll.
-3. Search songs and artists, and play with one click.
-4. One-click "Connect Spotify" — end users never touch credentials.
-5. Admin setup: enter the site's Spotify app Client ID and Secret once.
-6. The full-player window: large artwork, a seek bar with time read-outs, the full transport, volume, and your library inline.
+1. The full-player window: large artwork, a seek bar with time read-outs, the full transport, volume, and your library inline.
+2. The Music widget: now playing with transport controls, shuffle/repeat, seek, and volume.
+3. Browse your library — Queue, Liked Songs, Top tracks, Recently played, and Playlists, with infinite scroll.
+4. Search songs and artists, and play with one click.
+5. One-click "Connect Spotify" — end users never touch credentials.
+6. Admin setup: enter the site's Spotify app Client ID and Secret once.
 
 == Changelog ==
 
