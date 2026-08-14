@@ -28,9 +28,13 @@ import {
 	playUri,
 	previous,
 	saveSettings,
+	seek,
+	setRepeat,
+	setShuffle,
 	setVolume,
 	type BrowseItem,
 	type NowPlaying,
+	type RepeatState,
 } from './api';
 import {
 	ensureSharedDevice,
@@ -275,9 +279,34 @@ function mount( container: HTMLElement ): WidgetTeardown {
 	let volumeBtn: HTMLElement | null = null;
 	let volumeWrap: HTMLElement | null = null;
 	let volumeInput: HTMLInputElement | null = null;
+	let shuffleBtn: HTMLElement | null = null;
+	let repeatBtn: HTMLElement | null = null;
+	let seekFill: HTMLElement | null = null;
 	let isPlaying = false;
 	let hasTrack = false;
 	let built = false;
+	// Playback modes + progress, mirrored from /now-playing so the shuffle
+	// / repeat buttons and the seek bar reflect real device state.
+	let shuffleOn = false;
+	let repeatMode: RepeatState = 'off';
+	let durationMs = 0;
+	// `progressMs` is the server's last-known position; `progressAt` marks
+	// when we captured it, so the 1s ticker can advance the bar smoothly
+	// between the 5s polls without mutating the source value.
+	let progressMs = 0;
+	let progressAt = 0;
+
+	function paintProgress(): void {
+		if ( ! seekFill ) {
+			return;
+		}
+		const effective =
+			isPlaying && durationMs > 0
+				? Math.min( durationMs, progressMs + ( Date.now() - progressAt ) )
+				: progressMs;
+		const pct = durationMs > 0 ? Math.min( 100, ( effective / durationMs ) * 100 ) : 0;
+		seekFill.style.width = `${ pct }%`;
+	}
 
 	function buildPlayer(): void {
 		container.replaceChildren();
@@ -342,6 +371,36 @@ function mount( container: HTMLElement ): WidgetTeardown {
 
 		container.appendChild( card );
 
+		// Seek bar — click anywhere to jump. The fill mirrors the poll and
+		// is advanced smoothly by the 1s ticker between polls.
+		const seekBar = el( 'div', 'desktop-mode-music-widget__seek' );
+		seekBar.setAttribute( 'role', 'slider' );
+		seekBar.setAttribute(
+			'aria-label',
+			__( 'Seek', 'deskbeat-for-desktop-mode' ),
+		);
+		const seekFillEl = el( 'div', 'desktop-mode-music-widget__seek-fill' );
+		seekBar.appendChild( seekFillEl );
+		seekFill = seekFillEl;
+		seekBar.addEventListener( 'click', ( e ) => {
+			if ( durationMs <= 0 ) {
+				return;
+			}
+			const rect = seekBar.getBoundingClientRect();
+			const pct = Math.min(
+				1,
+				Math.max( 0, ( e.clientX - rect.left ) / rect.width ),
+			);
+			const positionMs = Math.round( pct * durationMs );
+			progressMs = positionMs;
+			progressAt = Date.now();
+			paintProgress();
+			seek( positionMs, currentDeviceId || undefined )
+				.then( () => quickRefresh() )
+				.catch( handleControlError );
+		} );
+		container.appendChild( seekBar );
+
 		const controls = el( 'div', 'desktop-mode-music-widget__controls' );
 		const prevBtn = iconButton(
 			'dashicons-controls-back',
@@ -368,6 +427,35 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			__( 'Volume', 'deskbeat-for-desktop-mode' ),
 		);
 		volumeBtn = volBtn;
+
+		const shuffleB = iconButton(
+			'dashicons-randomize',
+			__( 'Shuffle', 'deskbeat-for-desktop-mode' ),
+		);
+		shuffleBtn = shuffleB;
+		const repeatB = iconButton(
+			'dashicons-controls-repeat',
+			__( 'Repeat', 'deskbeat-for-desktop-mode' ),
+		);
+		repeatBtn = repeatB;
+
+		shuffleB.addEventListener(
+			'click',
+			run( () => setShuffle( ! shuffleOn, currentDeviceId || undefined ) ),
+		);
+		// Cycle off → repeat-all (context) → repeat-one (track) → off.
+		repeatB.addEventListener(
+			'click',
+			run( () => {
+				const nextMode: RepeatState =
+					repeatMode === 'off'
+						? 'context'
+						: repeatMode === 'context'
+							? 'track'
+							: 'off';
+				return setRepeat( nextMode, currentDeviceId || undefined );
+			} ),
+		);
 
 		prevBtn.addEventListener( 'click', run( () => previous() ) );
 		nextBtn.addEventListener( 'click', run( () => next() ) );
@@ -399,7 +487,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			);
 		} );
 
-		controls.append( prevBtn, playBtn, nextBtn, volBtn );
+		controls.append( shuffleB, prevBtn, playBtn, nextBtn, repeatB, volBtn );
 		container.appendChild( controls );
 
 		// Volume slider — collapsible, revealed by the speaker button and
@@ -440,20 +528,41 @@ function mount( container: HTMLElement ): WidgetTeardown {
 
 	function paint( np: NowPlaying ): void {
 		currentDeviceId = np.device?.id ?? '';
-		// Volume: show the speaker + slider only when the active device
-		// reports/permits volume; skip updating the slider mid-adjust.
+		// Playback modes — reflect the device's shuffle / repeat state on
+		// the toggle buttons (independent of whether a track is loaded).
+		shuffleOn = Boolean( np.shuffle_state );
+		if ( shuffleBtn ) {
+			shuffleBtn.classList.toggle( 'is-active', shuffleOn );
+		}
+		repeatMode = np.repeat_state ?? 'off';
+		if ( repeatBtn ) {
+			repeatBtn.classList.toggle( 'is-active', repeatMode !== 'off' );
+			repeatBtn.classList.toggle( 'is-one', repeatMode === 'track' );
+			const repeatLabel =
+				repeatMode === 'track'
+					? __( 'Repeat one', 'deskbeat-for-desktop-mode' )
+					: repeatMode === 'context'
+						? __( 'Repeat all', 'deskbeat-for-desktop-mode' )
+						: __( 'Repeat', 'deskbeat-for-desktop-mode' );
+			repeatBtn.title = repeatLabel;
+			repeatBtn.setAttribute( 'aria-label', repeatLabel );
+		}
+		// Volume: keep the speaker button present as a control; only sync
+		// the slider value when the active device reports volume, and skip
+		// updating it mid-adjust. If the device can't report/set volume the
+		// slider stays collapsed, but the button remains available.
 		if ( volumeBtn && volumeWrap && volumeInput ) {
 			const dev = np.device;
-			if ( dev && typeof dev.volume_percent === 'number' ) {
-				const supports = dev.supports_volume !== false;
-				volumeBtn.hidden = ! supports;
-				if ( ! supports ) {
-					volumeWrap.hidden = true;
-				} else if ( Date.now() >= suppressVolumeUntil ) {
+			volumeBtn.hidden = false;
+			if (
+				dev &&
+				typeof dev.volume_percent === 'number' &&
+				dev.supports_volume !== false
+			) {
+				if ( Date.now() >= suppressVolumeUntil ) {
 					volumeInput.value = String( dev.volume_percent );
 				}
 			} else {
-				volumeBtn.hidden = true;
 				volumeWrap.hidden = true;
 			}
 		}
@@ -466,6 +575,9 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			isPlaying = false;
 			hasTrack = false;
 			playIcon.className = 'dashicons dashicons-controls-play';
+			durationMs = 0;
+			progressMs = 0;
+			paintProgress();
 			return;
 		}
 		hasTrack = true;
@@ -486,6 +598,10 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		playIcon.className = isPlaying
 			? 'dashicons dashicons-controls-pause'
 			: 'dashicons dashicons-controls-play';
+		durationMs = item.duration_ms || 0;
+		progressMs = np.progress_ms ?? 0;
+		progressAt = Date.now();
+		paintProgress();
 	}
 
 	function refresh(): Promise< void > {
@@ -585,11 +701,19 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			} );
 	}
 
+	// Advance the seek bar smoothly between the 5s polls.
+	const progressTimer = setInterval( () => {
+		if ( ! destroyed ) {
+			paintProgress();
+		}
+	}, 1000 );
+
 	init();
 
 	return () => {
 		destroyed = true;
 		stop();
+		clearInterval( progressTimer );
 	};
 }
 

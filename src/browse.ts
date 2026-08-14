@@ -54,7 +54,18 @@ export function renderWidgetBrowse(
 	container.replaceChildren();
 	container.classList.add( 'desktop-mode-music-widget__browse' );
 
-	const nav = node( 'div', 'desktop-mode-music-widget__browse-nav' );
+	const nav = document.createElement( 'select' );
+	nav.className = 'desktop-mode-music-widget__nav-select';
+	nav.setAttribute(
+		'aria-label',
+		__( 'Browse section', 'deskbeat-for-desktop-mode' ),
+	);
+	for ( const section of SECTIONS ) {
+		const opt = document.createElement( 'option' );
+		opt.value = section.id;
+		opt.textContent = section.label;
+		nav.appendChild( opt );
+	}
 	const searchInput = document.createElement( 'input' );
 	searchInput.type = 'search';
 	searchInput.className = 'desktop-mode-music-widget__search';
@@ -69,7 +80,6 @@ export function renderWidgetBrowse(
 	let loading = false;
 	let epoch = 0;
 	let searchTimer: ReturnType< typeof setTimeout > | null = null;
-	const chips = new Map< BrowseSection, HTMLElement >();
 
 	function buildRow( item: BrowseItem ): HTMLElement {
 		const row = document.createElement( 'button' );
@@ -208,9 +218,7 @@ export function renderWidgetBrowse(
 		active = section;
 		cursor = null;
 		epoch += 1;
-		for ( const [ id, chip ] of chips ) {
-			chip.classList.toggle( 'is-active', id === section );
-		}
+		nav.value = section;
 		const isSearch = section === 'search';
 		searchInput.hidden = ! isSearch;
 		if ( isSearch ) {
@@ -220,16 +228,7 @@ export function renderWidgetBrowse(
 		}
 	}
 
-	for ( const section of SECTIONS ) {
-		const chip = document.createElement( 'button' );
-		chip.type = 'button';
-		chip.className = 'desktop-mode-music-widget__chip';
-		chip.classList.toggle( 'is-active', section.id === active );
-		chip.textContent = section.label;
-		chip.addEventListener( 'click', () => setActive( section.id ) );
-		chips.set( section.id, chip );
-		nav.appendChild( chip );
-	}
+	nav.addEventListener( 'change', () => setActive( nav.value as BrowseSection ) );
 
 	setActive( active );
 }

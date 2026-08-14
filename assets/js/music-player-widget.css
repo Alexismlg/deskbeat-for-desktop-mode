@@ -25,20 +25,20 @@
 	gap: 6px;
 	background: transparent;
 	color: inherit;
-	border: 1px solid rgba( 255, 255, 255, 0.18 );
+	border: 1px solid var( --os-ui-border, rgba( 255, 255, 255, 0.18 ) );
 	border-radius: 8px;
 	padding: 8px;
 	line-height: 0;
 }
 
 .desktop-mode-music-widget__btn:hover {
-	background: rgba( 255, 255, 255, 0.12 );
+	background: var( --os-ui-hover, rgba( 255, 255, 255, 0.12 ) );
 }
 
 .desktop-mode-music-widget__btn.is-primary {
 	background: var( --wp-admin-theme-color, #2271b1 );
 	border-color: transparent;
-	color: #fff;
+	color: var( --os-ui-fg-on-accent, #fff );
 }
 
 .desktop-mode-music-widget__btn--text {
@@ -50,6 +50,50 @@
 /* The shell forces `cursor: default !important` on window/desktop
  * content; out-specify it so our buttons show the hand. */
 body.os-active .desktop-mode-music-widget__btn {
+	cursor: pointer !important;
+}
+
+/* Shuffle / repeat active state — accent the glyph. These are toggles,
+ * not the primary action, so no full fill like is-primary. */
+.desktop-mode-music-widget__btn.is-active {
+	color: var( --wp-admin-theme-color, #2271b1 );
+	border-color: var( --wp-admin-theme-color, #2271b1 );
+}
+
+/* Repeat-one: a small "1" over the repeat glyph. */
+.desktop-mode-music-widget__btn.is-one {
+	position: relative;
+}
+
+.desktop-mode-music-widget__btn.is-one::after {
+	content: '1';
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	font-size: 9px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+/* Seek bar — click anywhere to jump. */
+.desktop-mode-music-widget__seek {
+	height: 4px;
+	margin: 8px 2px 2px;
+	background: var( --os-ui-border, rgba( 255, 255, 255, 0.18 ) );
+	border-radius: 999px;
+	cursor: pointer;
+	overflow: hidden;
+}
+
+.desktop-mode-music-widget__seek-fill {
+	height: 100%;
+	width: 0;
+	background: var( --wp-admin-theme-color, #2271b1 );
+	border-radius: inherit;
+	transition: width 0.25s linear;
+}
+
+body.os-active .desktop-mode-music-widget__seek {
 	cursor: pointer !important;
 }
 
@@ -189,25 +233,15 @@ body.os-active .desktop-mode-music-widget__volume {
 	flex: 1 1 auto;
 }
 
-.desktop-mode-music-widget__browse-nav {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 4px;
-}
-
-.desktop-mode-music-widget__chip {
-	background: transparent;
+.desktop-mode-music-widget__nav-select {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 6px 10px;
+	border-radius: 8px;
+	border: 1px solid var( --os-ui-border, rgba( 255, 255, 255, 0.18 ) );
+	background: var( --os-ui-bg-subtle, rgba( 255, 255, 255, 0.06 ) );
 	color: inherit;
-	border: 1px solid rgba( 255, 255, 255, 0.18 );
-	border-radius: 999px;
-	padding: 3px 10px;
-	font-size: 12px;
-}
-
-.desktop-mode-music-widget__chip.is-active {
-	background: var( --wp-admin-theme-color, #2271b1 );
-	border-color: transparent;
-	color: #fff;
+	font-size: 13px;
 }
 
 .desktop-mode-music-widget__search {
@@ -215,8 +249,8 @@ body.os-active .desktop-mode-music-widget__volume {
 	box-sizing: border-box;
 	padding: 6px 10px;
 	border-radius: 8px;
-	border: 1px solid rgba( 255, 255, 255, 0.18 );
-	background: rgba( 255, 255, 255, 0.06 );
+	border: 1px solid var( --os-ui-border, rgba( 255, 255, 255, 0.18 ) );
+	background: var( --os-ui-bg-subtle, rgba( 255, 255, 255, 0.06 ) );
 	color: inherit;
 	font-size: 13px;
 }
@@ -252,7 +286,7 @@ body.os-active .desktop-mode-music-widget__volume {
 }
 
 .desktop-mode-music-widget__row:hover {
-	background: rgba( 255, 255, 255, 0.1 );
+	background: var( --os-ui-hover, rgba( 255, 255, 255, 0.1 ) );
 }
 
 .desktop-mode-music-widget__row-thumb {
@@ -294,7 +328,7 @@ body.os-active .desktop-mode-music-widget__volume {
 }
 
 /* Hand cursor on the browse controls (out-specify the shell policy). */
-body.os-active .desktop-mode-music-widget__chip,
+body.os-active .desktop-mode-music-widget__nav-select,
 body.os-active .desktop-mode-music-widget__row {
 	cursor: pointer !important;
 }

@@ -101,6 +101,27 @@
       body: JSON.stringify({ deviceId, play: playNow })
     });
   }
+  function setShuffle(state, deviceId) {
+    return request("/shuffle", {
+      method: "POST",
+      body: JSON.stringify({ state, ...deviceId ? { deviceId } : {} })
+    });
+  }
+  function setRepeat(state, deviceId) {
+    return request("/repeat", {
+      method: "POST",
+      body: JSON.stringify({ state, ...deviceId ? { deviceId } : {} })
+    });
+  }
+  function seek(positionMs, deviceId) {
+    return request("/seek", {
+      method: "POST",
+      body: JSON.stringify({
+        positionMs: Math.max(0, Math.round(positionMs)),
+        ...deviceId ? { deviceId } : {}
+      })
+    });
+  }
   function setVolume(volumePercent, deviceId) {
     return request("/volume", {
       method: "POST",
@@ -306,7 +327,18 @@
   function renderWidgetBrowse(container, deps) {
     container.replaceChildren();
     container.classList.add("desktop-mode-music-widget__browse");
-    const nav = node("div", "desktop-mode-music-widget__browse-nav");
+    const nav = document.createElement("select");
+    nav.className = "desktop-mode-music-widget__nav-select";
+    nav.setAttribute(
+      "aria-label",
+      __("Browse section", "deskbeat-for-desktop-mode")
+    );
+    for (const section of SECTIONS) {
+      const opt = document.createElement("option");
+      opt.value = section.id;
+      opt.textContent = section.label;
+      nav.appendChild(opt);
+    }
     const searchInput = document.createElement("input");
     searchInput.type = "search";
     searchInput.className = "desktop-mode-music-widget__search";
@@ -320,7 +352,6 @@
     let loading = false;
     let epoch = 0;
     let searchTimer = null;
-    const chips = /* @__PURE__ */ new Map();
     function buildRow(item) {
       const row = document.createElement("button");
       row.type = "button";
@@ -431,9 +462,7 @@
       active = section;
       cursor = null;
       epoch += 1;
-      for (const [id, chip] of chips) {
-        chip.classList.toggle("is-active", id === section);
-      }
+      nav.value = section;
       const isSearch = section === "search";
       searchInput.hidden = !isSearch;
       if (isSearch) {
@@ -442,16 +471,7 @@
         loadPage(true);
       }
     }
-    for (const section of SECTIONS) {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "desktop-mode-music-widget__chip";
-      chip.classList.toggle("is-active", section.id === active);
-      chip.textContent = section.label;
-      chip.addEventListener("click", () => setActive(section.id));
-      chips.set(section.id, chip);
-      nav.appendChild(chip);
-    }
+    nav.addEventListener("change", () => setActive(nav.value));
     setActive(active);
   }
   const WIDGET_ID = "desktop-mode/music-player";
@@ -617,9 +637,25 @@
     let volumeBtn = null;
     let volumeWrap = null;
     let volumeInput = null;
+    let shuffleBtn = null;
+    let repeatBtn = null;
+    let seekFill = null;
     let isPlaying = false;
     let hasTrack = false;
     let built = false;
+    let shuffleOn = false;
+    let repeatMode = "off";
+    let durationMs = 0;
+    let progressMs = 0;
+    let progressAt = 0;
+    function paintProgress() {
+      if (!seekFill) {
+        return;
+      }
+      const effective = isPlaying && durationMs > 0 ? Math.min(durationMs, progressMs + (Date.now() - progressAt)) : progressMs;
+      const pct = durationMs > 0 ? Math.min(100, effective / durationMs * 100) : 0;
+      seekFill.style.width = `${pct}%`;
+    }
     function buildPlayer() {
       container.replaceChildren();
       built = true;
@@ -676,6 +712,31 @@
       });
       card.append(browseBtn, disconnectBtn);
       container.appendChild(card);
+      const seekBar = el("div", "desktop-mode-music-widget__seek");
+      seekBar.setAttribute("role", "slider");
+      seekBar.setAttribute(
+        "aria-label",
+        __("Seek", "deskbeat-for-desktop-mode")
+      );
+      const seekFillEl = el("div", "desktop-mode-music-widget__seek-fill");
+      seekBar.appendChild(seekFillEl);
+      seekFill = seekFillEl;
+      seekBar.addEventListener("click", (e) => {
+        if (durationMs <= 0) {
+          return;
+        }
+        const rect = seekBar.getBoundingClientRect();
+        const pct = Math.min(
+          1,
+          Math.max(0, (e.clientX - rect.left) / rect.width)
+        );
+        const positionMs = Math.round(pct * durationMs);
+        progressMs = positionMs;
+        progressAt = Date.now();
+        paintProgress();
+        seek(positionMs, currentDeviceId || void 0).then(() => quickRefresh()).catch(handleControlError);
+      });
+      container.appendChild(seekBar);
       const controls = el("div", "desktop-mode-music-widget__controls");
       const prevBtn = iconButton(
         "dashicons-controls-back",
@@ -699,6 +760,27 @@
         __("Volume", "deskbeat-for-desktop-mode")
       );
       volumeBtn = volBtn;
+      const shuffleB = iconButton(
+        "dashicons-randomize",
+        __("Shuffle", "deskbeat-for-desktop-mode")
+      );
+      shuffleBtn = shuffleB;
+      const repeatB = iconButton(
+        "dashicons-controls-repeat",
+        __("Repeat", "deskbeat-for-desktop-mode")
+      );
+      repeatBtn = repeatB;
+      shuffleB.addEventListener(
+        "click",
+        run(() => setShuffle(!shuffleOn, currentDeviceId || void 0))
+      );
+      repeatB.addEventListener(
+        "click",
+        run(() => {
+          const nextMode = repeatMode === "off" ? "context" : repeatMode === "context" ? "track" : "off";
+          return setRepeat(nextMode, currentDeviceId || void 0);
+        })
+      );
       prevBtn.addEventListener("click", run(() => previous()));
       nextBtn.addEventListener("click", run(() => next()));
       playBtn.addEventListener("click", () => {
@@ -721,7 +803,7 @@
           )
         );
       });
-      controls.append(prevBtn, playBtn, nextBtn, volBtn);
+      controls.append(shuffleB, prevBtn, playBtn, nextBtn, repeatB, volBtn);
       container.appendChild(controls);
       const vWrap = el("div", "desktop-mode-music-widget__volume-wrap");
       const vInput = document.createElement("input");
@@ -756,18 +838,26 @@
     }
     function paint(np) {
       currentDeviceId = np.device?.id ?? "";
+      shuffleOn = Boolean(np.shuffle_state);
+      if (shuffleBtn) {
+        shuffleBtn.classList.toggle("is-active", shuffleOn);
+      }
+      repeatMode = np.repeat_state ?? "off";
+      if (repeatBtn) {
+        repeatBtn.classList.toggle("is-active", repeatMode !== "off");
+        repeatBtn.classList.toggle("is-one", repeatMode === "track");
+        const repeatLabel = repeatMode === "track" ? __("Repeat one", "deskbeat-for-desktop-mode") : repeatMode === "context" ? __("Repeat all", "deskbeat-for-desktop-mode") : __("Repeat", "deskbeat-for-desktop-mode");
+        repeatBtn.title = repeatLabel;
+        repeatBtn.setAttribute("aria-label", repeatLabel);
+      }
       if (volumeBtn && volumeWrap && volumeInput) {
         const dev = np.device;
-        if (dev && typeof dev.volume_percent === "number") {
-          const supports = dev.supports_volume !== false;
-          volumeBtn.hidden = !supports;
-          if (!supports) {
-            volumeWrap.hidden = true;
-          } else if (Date.now() >= suppressVolumeUntil) {
+        volumeBtn.hidden = false;
+        if (dev && typeof dev.volume_percent === "number" && dev.supports_volume !== false) {
+          if (Date.now() >= suppressVolumeUntil) {
             volumeInput.value = String(dev.volume_percent);
           }
         } else {
-          volumeBtn.hidden = true;
           volumeWrap.hidden = true;
         }
       }
@@ -780,6 +870,9 @@
         isPlaying = false;
         hasTrack = false;
         playIcon.className = "dashicons dashicons-controls-play";
+        durationMs = 0;
+        progressMs = 0;
+        paintProgress();
         return;
       }
       hasTrack = true;
@@ -795,6 +888,10 @@
       }
       isPlaying = Boolean(np.is_playing);
       playIcon.className = isPlaying ? "dashicons dashicons-controls-pause" : "dashicons dashicons-controls-play";
+      durationMs = item.duration_ms || 0;
+      progressMs = np.progress_ms ?? 0;
+      progressAt = Date.now();
+      paintProgress();
     }
     function refresh() {
       return fetchNowPlaying().then((np) => {
@@ -874,10 +971,16 @@
         }
       });
     }
+    const progressTimer = setInterval(() => {
+      if (!destroyed) {
+        paintProgress();
+      }
+    }, 1e3);
     init();
     return () => {
       destroyed = true;
       stop();
+      clearInterval(progressTimer);
     };
   }
   const widgets = window.openStationWidgets ?? (window.openStationWidgets = {});
