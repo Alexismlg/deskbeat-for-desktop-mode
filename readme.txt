@@ -79,6 +79,7 @@ No. The Spotify Web Playback SDK requires Premium. Free accounts can still view 
 3. Search songs and artists, and play with one click.
 4. One-click "Connect Spotify" — end users never touch credentials.
 5. Admin setup: enter the site's Spotify app Client ID and Secret once.
+6. The full-player window: large artwork, a seek bar with time read-outs, the full transport, volume, and your library inline.
 
 == Changelog ==
 
