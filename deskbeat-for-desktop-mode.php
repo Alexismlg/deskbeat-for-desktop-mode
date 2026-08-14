@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Deskbeat for Desktop Mode
+ * Plugin Name:       Deskbeat for OpenStation
  * Description:       A now-playing widget for OpenStation (formerly Desktop Mode) that connects your Spotify account — playback controls, volume, and a browsable library, right on the desktop.
  * Version:           1.2.1
  * Requires at least: 6.5

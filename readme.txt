@@ -1,4 +1,4 @@
-=== Deskbeat for Desktop Mode ===
+=== Deskbeat for OpenStation ===
 Contributors: alexismp
 Tags: desktop-mode, spotify, music, player, widget
 Requires at least: 6.5
@@ -52,7 +52,7 @@ This plugin is not affiliated with, endorsed by, or sponsored by Spotify. No Spo
 == Installation ==
 
 1. Install and activate the **OpenStation** plugin (formerly Desktop Mode).
-2. Install and activate **Deskbeat for Desktop Mode**.
+2. Install and activate **Deskbeat for OpenStation**.
 3. Create a free app at the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
 4. In the app's settings, add the Redirect URI shown in the widget's setup screen (it is your site's REST callback), and enable **Web API** and **Web Playback SDK**.
 5. In OpenStation, add the **Music** widget from the widget picker. As an administrator, paste the app's Client ID and Client Secret in the setup screen.
