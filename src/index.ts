@@ -59,7 +59,10 @@ declare global {
 }
 
 interface DesktopApi {
-	openNativeWindow?: ( id: string ) => void;
+	// Public facade method to open a registered native window by id
+	// (alias of `openWindowById`). NOT `openNativeWindow` — that's an
+	// internal dep and isn't exposed on `wp.os`.
+	openWindow?: ( id: string, opts?: { source?: string } ) => boolean;
 	showToast?: ( opts: { message: string; type?: string } ) => void;
 	startOAuth?: ( service: string ) => Promise< { ok: boolean; service: string } >;
 	confirm?: ( opts: {
@@ -335,9 +338,9 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		);
 		expandBtn.classList.add( 'desktop-mode-music-widget__open' );
 		expandBtn.addEventListener( 'click', () => {
-			const open = desktopApi()?.openNativeWindow;
+			const open = desktopApi()?.openWindow;
 			if ( open ) {
-				open( 'desktop-mode-music-player' );
+				open( 'desktop-mode-music-player', { source: 'deskbeat-widget' } );
 			}
 		} );
 

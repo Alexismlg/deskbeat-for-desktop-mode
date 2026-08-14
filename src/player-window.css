@@ -13,7 +13,10 @@
 	flex-direction: column;
 	align-items: center;
 	padding: 20px 16px;
-	color: inherit;
+	/* Explicit high-contrast base (theme-aware) — the shell's inherited
+	 * text color renders too dim on the window surface, washing out the
+	 * track title and list. Secondary text dims from this via opacity. */
+	color: var( --os-ui-fg, #fff );
 	box-sizing: border-box;
 	height: 100%;
 	min-height: 0;
@@ -104,7 +107,8 @@
 
 .deskbeat-player__time {
 	font-size: 11px;
-	opacity: 0.7;
+	color: var( --os-ui-fg, #fff );
+	opacity: 0.85;
 	font-variant-numeric: tabular-nums;
 	flex: 0 0 auto;
 	min-width: 32px;
@@ -142,17 +146,17 @@
 	justify-content: center;
 	gap: 6px;
 	background: transparent;
-	color: inherit;
+	/* High-contrast glyph so inactive controls read clearly on the dark
+	 * window; the active (accent) and play (filled) states stand out. */
+	color: var( --os-ui-fg, #fff );
 	border: none;
 	border-radius: 999px;
 	padding: 10px;
 	line-height: 0;
-	opacity: 0.85;
 }
 
 .deskbeat-player__btn:hover {
 	background: var( --os-ui-hover, rgba( 255, 255, 255, 0.12 ) );
-	opacity: 1;
 }
 
 /* Play/pause — the one filled, prominent, circular action. */
@@ -210,6 +214,8 @@
 	align-items: center;
 	gap: 10px;
 	padding: 0 4px;
+	/* Speaker glyph high-contrast like the transport controls. */
+	color: var( --os-ui-fg, #fff );
 }
 
 .deskbeat-player__volume {

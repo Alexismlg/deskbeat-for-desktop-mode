@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return void
  */
-function deskbeat_player_window_register_assets() {
+function desktop_mode_music_player_register_window_assets() {
 	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	$version = MUSIC_PLAYER_FOR_DESKTOP_MODE_VERSION;
 	$dir     = MUSIC_PLAYER_FOR_DESKTOP_MODE_DIR;
@@ -53,7 +53,7 @@ function deskbeat_player_window_register_assets() {
 		$dir . 'languages'
 	);
 }
-add_action( 'init', 'deskbeat_player_window_register_assets', 5 );
+add_action( 'init', 'desktop_mode_music_player_register_window_assets', 5 );
 
 /**
  * Register the full-player native window with OpenStation.
@@ -65,7 +65,7 @@ add_action( 'init', 'deskbeat_player_window_register_assets', 5 );
  *
  * @return void
  */
-function deskbeat_register_player_window() {
+function desktop_mode_music_player_register_window() {
 	if ( ! function_exists( 'openstation_register_window' ) ) {
 		return;
 	}
@@ -82,11 +82,11 @@ function deskbeat_register_player_window() {
 			'min_height' => 420,
 			// Shipped to the JS bundle; read via `wp.os.getWindowConfig()`.
 			'config'     => desktop_mode_music_player_js_config(),
-			'template'   => 'deskbeat_player_window_template',
+			'template'   => 'desktop_mode_music_player_window_template',
 		)
 	);
 }
-add_action( 'init', 'deskbeat_register_player_window', 20 );
+add_action( 'init', 'desktop_mode_music_player_register_window', 20 );
 
 /**
  * Server-rendered placeholder body. The JS renderer replaces it on open;
@@ -96,7 +96,7 @@ add_action( 'init', 'deskbeat_register_player_window', 20 );
  *
  * @return void
  */
-function deskbeat_player_window_template() {
+function desktop_mode_music_player_window_template() {
 	echo '<div class="deskbeat-player__gate"><p class="deskbeat-player__hint">'
 		. esc_html__( 'Loading the player…', 'deskbeat-for-desktop-mode' )
 		. '</p></div>';
@@ -111,7 +111,7 @@ function deskbeat_player_window_template() {
  *
  * @return void
  */
-function deskbeat_player_window_enqueue_styles() {
+function desktop_mode_music_player_enqueue_window_styles() {
 	if ( function_exists( 'openstation_is_enabled' ) && ! openstation_is_enabled() ) {
 		return;
 	}
@@ -120,4 +120,4 @@ function deskbeat_player_window_enqueue_styles() {
 	}
 	wp_enqueue_style( 'deskbeat-player-window' );
 }
-add_action( 'admin_enqueue_scripts', 'deskbeat_player_window_enqueue_styles', 20 );
+add_action( 'admin_enqueue_scripts', 'desktop_mode_music_player_enqueue_window_styles', 20 );

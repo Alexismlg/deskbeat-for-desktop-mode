@@ -4,11 +4,11 @@ Tags: desktop-mode, spotify, music, player, widget
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A now-playing widget for OpenStation (formerly Desktop Mode) that connects your Spotify account — playback controls, volume, and a browsable library on the desktop.
+A now-playing Spotify widget for OpenStation (formerly Desktop Mode) — controls, volume, and a browsable library on your desktop.
 
 == Description ==
 
@@ -81,6 +81,11 @@ No. The Spotify Web Playback SDK requires Premium. Free accounts can still view 
 5. Admin setup: enter the site's Spotify app Client ID and Secret once.
 
 == Changelog ==
+
+= 1.2.1 =
+* Fixed: the widget's "open full player" button did nothing — it called an internal API that isn't exposed on `wp.os`; it now uses `wp.os.openWindow`. (Opening the full player from the dock already worked.)
+* Improved contrast of the full-player window controls, seek time read-outs, and volume on the dark surface.
+* Housekeeping: prefixed the player-window functions and shortened the short description (Plugin Check).
 
 = 1.2.0 =
 * **Full-player window** — open a large "big screen" player from the widget (a native OpenStation window): large artwork, seek bar with time read-outs, the full transport, an always-visible volume slider, and Browse / Search inline.

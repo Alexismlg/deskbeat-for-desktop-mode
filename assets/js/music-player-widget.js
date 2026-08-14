@@ -684,9 +684,9 @@
       );
       expandBtn.classList.add("desktop-mode-music-widget__open");
       expandBtn.addEventListener("click", () => {
-        const open = desktopApi()?.openNativeWindow;
+        const open = desktopApi()?.openWindow;
         if (open) {
-          open("desktop-mode-music-player");
+          open("desktop-mode-music-player", { source: "deskbeat-widget" });
         }
       });
       const browseBtn = iconButton(
