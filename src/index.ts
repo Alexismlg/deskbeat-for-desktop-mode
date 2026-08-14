@@ -329,6 +329,18 @@ function mount( container: HTMLElement ): WidgetTeardown {
 		meta.append( trackEl, artistEl );
 		card.appendChild( meta );
 
+		const expandBtn = iconButton(
+			'dashicons-fullscreen-alt',
+			__( 'Open full player', 'deskbeat-for-desktop-mode' ),
+		);
+		expandBtn.classList.add( 'desktop-mode-music-widget__open' );
+		expandBtn.addEventListener( 'click', () => {
+			const open = desktopApi()?.openNativeWindow;
+			if ( open ) {
+				open( 'desktop-mode-music-player' );
+			}
+		} );
+
 		const browseBtn = iconButton(
 			'dashicons-list-view',
 			__( 'Browse your library', 'deskbeat-for-desktop-mode' ),
@@ -367,7 +379,7 @@ function mount( container: HTMLElement ): WidgetTeardown {
 			} )();
 		} );
 
-		card.append( browseBtn, disconnectBtn );
+		card.append( expandBtn, browseBtn, disconnectBtn );
 
 		container.appendChild( card );
 

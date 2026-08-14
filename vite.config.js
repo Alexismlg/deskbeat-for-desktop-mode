@@ -18,23 +18,39 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'node:path';
 
+// Two self-contained IIFE bundles, each built in its own pass (selected
+// by DESKBEAT_ENTRY): the dock widget and the full-player native window.
+const ENTRIES = {
+	widget: {
+		entry: 'src/index.ts',
+		base: 'music-player-widget',
+		name: 'musicPlayerForDesktopMode',
+	},
+	'player-window': {
+		entry: 'src/player-window.ts',
+		base: 'music-player-window',
+		name: 'musicPlayerWindowForDesktopMode',
+	},
+};
+
 export default defineConfig( ( { mode } ) => {
 	const isProd = mode === 'production';
-	const base = 'music-player-widget';
+	const target = ENTRIES[ process.env.DESKBEAT_ENTRY ] ?? ENTRIES.widget;
+	const base = target.base;
 
 	return {
 		build: {
 			outDir: 'assets/js',
-			// Two passes (dev + prod) write into the same dir — don't let
-			// the second run delete what the first produced.
+			// Passes (dev + prod, per entry) write into the same dir —
+			// don't let a later run delete what an earlier one produced.
 			emptyOutDir: false,
 			target: 'es2020',
 			minify: isProd ? 'esbuild' : false,
 			sourcemap: false,
 			lib: {
-				entry: resolve( __dirname, 'src/index.ts' ),
+				entry: resolve( __dirname, target.entry ),
 				formats: [ 'iife' ],
-				name: 'musicPlayerForDesktopMode',
+				name: target.name,
 				fileName: () => ( isProd ? `${ base }.min.js` : `${ base }.js` ),
 			},
 			rollupOptions: {

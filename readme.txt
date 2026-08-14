@@ -4,7 +4,7 @@ Tags: desktop-mode, spotify, music, player, widget
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,12 @@ No. The Spotify Web Playback SDK requires Premium. Free accounts can still view 
 5. Admin setup: enter the site's Spotify app Client ID and Secret once.
 
 == Changelog ==
+
+= 1.2.0 =
+* **Full-player window** — open a large "big screen" player from the widget (a native OpenStation window): large artwork, seek bar with time read-outs, the full transport, an always-visible volume slider, and Browse / Search inline.
+* **More transport controls in the widget** — shuffle, repeat (repeat-all / repeat-one), and a click-to-seek progress bar, alongside the existing play/pause, next, previous, and volume.
+* Playing a track or list from the full player jumps to the Queue so you can see what's coming up next.
+* Browse sections are now a compact dropdown; the widget's colors follow OpenStation's theme tokens (light/dark aware).
 
 = 1.1.0 =
 * Compatibility: updated for **OpenStation 1.0.1** — the host plugin formerly known as Desktop Mode. It renamed its public API (`openstation_*`), its script handle (`openstation`), its JS global (`wp.os`), the widget-mount registry (`window.openStationWidgets`), and the active body class (`os-active`); Deskbeat now targets these. Requires OpenStation 1.0.1 or newer.

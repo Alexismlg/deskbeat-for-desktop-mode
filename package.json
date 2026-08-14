@@ -4,7 +4,7 @@
 	"private": true,
 	"description": "Build pipeline for the Music Player for Desktop Mode plugin. Compiles src/index.ts into assets/js/music-player-widget[.min].js (+ .css).",
 	"scripts": {
-		"build": "vite build --mode development && vite build --mode production",
+		"build": "DESKBEAT_ENTRY=widget vite build --mode development && DESKBEAT_ENTRY=widget vite build --mode production && DESKBEAT_ENTRY=player-window vite build --mode development && DESKBEAT_ENTRY=player-window vite build --mode production",
 		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {

@@ -21,6 +21,13 @@ import {
 export interface WidgetBrowseDeps {
 	playItem: ( item: BrowseItem ) => Promise< void >;
 	toast: ( message: string, type?: 'success' | 'error' ) => void;
+	/**
+	 * After playing an item, jump the browse view to the Queue section so
+	 * the user sees what's coming up next. Used by the full-player window
+	 * (which stays on the browse view); the compact widget leaves it off
+	 * because it returns to the now-playing face instead.
+	 */
+	queueAfterPlay?: boolean;
 }
 
 const SECTIONS: Array< { id: BrowseSection; label: string } > = [
@@ -107,6 +114,13 @@ export function renderWidgetBrowse(
 		row.addEventListener( 'click', () => {
 			deps
 				.playItem( item )
+				.then( () => {
+					if ( deps.queueAfterPlay ) {
+						// Show what's coming up next. A small delay lets
+						// Spotify settle the new context before we fetch.
+						setTimeout( () => setActive( 'queue' ), 400 );
+					}
+				} )
 				.catch( ( err: Error ) => deps.toast( err.message, 'error' ) );
 		} );
 		return row;
